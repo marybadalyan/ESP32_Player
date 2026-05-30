@@ -32,7 +32,7 @@ static volatile int mp3Channels = 2;
 // ─────────────────────────────
 // RING BUFFER  (thread-safe)
 // ─────────────────────────────
-#define PCM_SIZE 8192
+#define PCM_SIZE 12288
 static int16_t      pcmRing[PCM_SIZE];
 static volatile int pcmRead  = 0;
 static volatile int pcmWrite = 0;
@@ -42,7 +42,9 @@ void pushPCM(const int16_t *data, int len) {
   portENTER_CRITICAL(&pcmMux);
   for (int i = 0; i < len; i++) {
     int next = (pcmWrite + 1) % PCM_SIZE;
-    if (next == pcmRead) break;
+    if (next == pcmRead) {
+  pcmRead = (pcmRead + 1) % PCM_SIZE; // overwrite oldest sample
+}
     pcmRing[pcmWrite] = data[i];
     pcmWrite = next;
   }
@@ -151,7 +153,7 @@ void renderAlbumArt() {
 // ─────────────────────────────
 // MP3 DECODE TASK  (Core 0)
 // ─────────────────────────────
-static uint8_t mp3InBuf[2048];
+static uint8_t mp3InBuf[4096];
 static int16_t mp3PcmBuf[1152 * 2];
 
 void mp3Task(void *p) {
