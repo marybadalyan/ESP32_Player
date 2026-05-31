@@ -4,6 +4,51 @@ Plays MP3 files from SPIFFS over Bluetooth A2DP to any BT headphones, and displa
 
 ---
 
+## Explanation
+
+1. Music is stored in an MP3 file as compressed digital data.
+
+2. The MP3 contains information describing which frequencies
+   exist and how strong they are over small periods of time.
+
+3. The music player decodes the MP3 and reconstructs PCM samples.
+
+4. PCM samples are numbers representing the instantaneous
+   amplitude of the sound wave.
+
+5. For CD quality audio, PCM typically consists of:
+
+      44,100 samples/sec
+      16 bits/sample
+      2 channels (stereo)
+
+   resulting in about 176 KB/s of raw audio data.
+
+6. A DAC converts the PCM samples into a rapidly changing voltage,
+   creating a staircase-like waveform.
+
+7. Analog filters smooth the staircase into a continuous analog
+   waveform.
+
+8. For Bluetooth audio, the PCM is compressed again using SBC.
+
+9. SBC analyzes the audio and removes information considered less
+   important to human hearing, reducing bandwidth requirements.
+
+10. Bluetooth sends the compressed data as digital radio packets.
+
+11. The headphones receive the packets, decode SBC back into PCM,
+    and use a DAC to recreate the analog waveform.
+
+12. The analog signal drives a coil inside the speaker driver.
+
+13. The coil interacts with a magnet, moving the diaphragm.
+
+14. The diaphragm moves air, producing pressure waves that reach
+    your ears and are perceived as sound.
+
+---
+
 ## Hardware
 
 | ESP32 Pin | OLED (SSD1306) |
